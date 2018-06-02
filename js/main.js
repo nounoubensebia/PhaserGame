@@ -7,7 +7,7 @@ var grille = {
             cols: 9,
             rows: 10,
             // from left
-            //index 1: tile color 0 = no-color , 1=red, 2=yellow, 3=black, 4=green, 5=bleu
+            //index 1: tile color 0 = no-color , 1=red, 2=yellow, 3=black, 4=green, 5=bleu *-1 p2
             //index 2: pawn id,  0= empty,  1=red, 2=yellow, 3=black, 4=green, 5=bleu * -1 = P2
             //index 1: bonus, 0 = empty
 
@@ -35,7 +35,8 @@ var mainState = {
         game.load.image('bird', 'assets/bird.png');
         game.load.image('pipe', 'assets/pipe.png');
         game.load.image('pawn', 'assets/pawn.png');
-
+        game.load.image('pawn-blue', 'assets/pawn-blue.png');
+        game.load.image('pawn-red', 'assets/pawn-red.png');
 
 
     },
@@ -115,11 +116,9 @@ var mainState = {
 
                 switch(grille.matrix[index][1]) {
 
-                    case 0:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird');
-                        break;
+
                     case 1:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn');
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn-red');
                         break;
                     case 2:
                         this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn');
@@ -131,7 +130,7 @@ var mainState = {
                         this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn');
                         break;
                     case 5:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn');
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn-blue');
                         break;
 
                     case -1:
@@ -246,6 +245,14 @@ var mainState = {
 
         }
 
+    },
+
+
+    movePawn: function(pawn,step){
+        //direction 1 =left, 2=top-left, 3 = top, 4=top-right ....8= bottom-left
+        for (var j=0; j<8;j++){
+
+        }
     }
 
 
