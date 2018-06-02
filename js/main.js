@@ -2,22 +2,26 @@ var game = new Phaser.Game(1000, 600);
 var dice, dices =[], pawn;
 var gameSceneW= 450, gameSceneH=600;
 var gameSceneOriginX = (1000-gameSceneW)/2 , gameSceneOriginY=50;
+
 var grille = {
             cols: 9,
             rows: 10,
+            // from left
+            //index 1: tile color 0 = no-color , 1=red, 2=yellow, 3=black, 4=green, 5=bleu
+            //index 2: pawn id,  0= empty,  1=red, 2=yellow, 3=black, 4=green, 5=bleu * -1 = P2
+            //index 1: bonus, 0 = empty
+
             matrix: [
-                1, 3, 2, 3, 1, 1, 3, 1, 1,
-                1, 1, 1, 1, 1, 1, 1, 1, 1,
-                1, 1, 3, 1, 1, 2, 1, 1, 1,
-                4, 1, 1, 3, 1, 1, 3, 1, 1,
-                1, 1, 2, 2, 1, 1, 4, 1, 1,
-                1, 1, 1, 3, 2, 1, 1, 1, 1,
-                4, 1, 2, 1, 2, 1, 1, 1, 1,
-                1, 1, 1, 1, 2, 1, 1, 1, 1,
-                1, 1, 1, 1, 2, 1, 1, 1, 1,
-                1, 1, 1, 1, 2, 1, 1, 1, 1
-
-
+                [0,1,0], [0,0,0], [0,2,0], [0,0,0], [0,3,0], [0,0,0], [0,4,0], [0,0,0], [0,5,0],
+                [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
+                [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
+                [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
+                [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
+                [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
+                [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
+                [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
+                [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
+                [0,1,0], [0,0,0], [0,2,0], [0,0,0], [0,3,0], [0,0,0], [0,4,0], [0,0,0], [0,5,0],
             ]
 
         };
@@ -31,9 +35,6 @@ var mainState = {
         game.load.image('bird', 'assets/bird.png');
         game.load.image('pipe', 'assets/pipe.png');
         game.load.image('pawn', 'assets/pawn.png');
-
-
-
 
 
 
@@ -55,7 +56,7 @@ var mainState = {
 
         this.gridUpdate();
         this.initializeDices();
-        this.initializePawns();
+        //this.initializePawns();
         },
 
 
@@ -87,7 +88,71 @@ var mainState = {
 
                 var index = r * grille.cols + c;
 
-                switch(grille.matrix[index]) {
+                 //index 1 0: no-color, 1=red, 2=yellow, 3=black, 4=green, 5=bleu
+                 //index 2: pawn id,  0= empty,  1=red, 2=yellow, 3=black, 4=green, 5=bleu * -1 = P2
+                 //index 3: bonus, 0 = empty
+
+                switch(grille.matrix[index][0]) {
+                    case 0:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird');
+                        break;
+                    case 1:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird');
+                        break;
+                    case 2:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pipe');
+                        break;
+                    case 3:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird');
+                        break;
+                    case 4:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pipe');
+                        break;
+                    case 5:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pipe');
+                        break;
+                }
+
+                switch(grille.matrix[index][1]) {
+
+                    case 0:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird');
+                        break;
+                    case 1:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn');
+                        break;
+                    case 2:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn');
+                        break;
+                    case 3:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn');
+                        break;
+                    case 4:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn');
+                        break;
+                    case 5:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn');
+                        break;
+
+                    case -1:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn');
+                        break;
+                    case -2:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn');
+                        break;
+                    case -3:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn');
+                        break;
+                    case -4:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn');
+                        break;
+                    case -5:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn');
+                        break;
+                }
+
+
+                switch(grille.matrix[index][2]) {
                     case 1:
                         this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird');
                         break;
