@@ -31,7 +31,12 @@ var mainState = {
 
     preload: function() {
         game.stage.backgroundColor = '#71c5cf';
-        game.load.spritesheet('dices', 'assets/Dices.png', 50, 50, 6);
+        game.load.spritesheet('dices-red', 'assets/Dices-red.png', 50, 50, 6);
+        game.load.spritesheet('dices-blue', 'assets/Dices-blue.png', 50, 50, 6);
+        game.load.spritesheet('dices-green', 'assets/Dices-green.png', 50, 50, 6);
+        game.load.spritesheet('dices-gray', 'assets/Dices-gray.png', 50, 50, 6);
+        game.load.spritesheet('dices-yellow', 'assets/Dices-yellow.png', 50, 50, 6);
+
         game.load.image('bird', 'assets/bird.png');
         game.load.image('pipe', 'assets/pipe.png');
         game.load.image('pawn', 'assets/pawn.png');
@@ -175,23 +180,46 @@ var mainState = {
     initializeDices: function(){
 
     // itinialize player2's dices
-        for (var i=0; i<grille.cols; i++){
-            if(i%2==0){
-                //this.generateDice(i*50,0);
 
+        var rand1 = Math.floor(Math.random() * 6);
+        dice = game.add.sprite(gameSceneOriginX+i*50, 0, 'dices');
+        dice.frame=rand;
+        //  Enables all kind of input actions on this image (click, etc)
+        dice.inputEnabled = true;
+        dice.events.onInputDown.add(this.generateDice, this);
+        dices.push(dice);
 
-                var rand = Math.floor(Math.random() * 6);
-                dice = game.add.sprite(gameSceneOriginX+i*50, 0, 'dices');
-                dice.frame=rand;
+        var rand2 = Math.floor(Math.random() * 6);
+        dice = game.add.sprite(gameSceneOriginX+i*50, 0, 'dices');
+        dice.frame=rand;
+        //  Enables all kind of input actions on this image (click, etc)
+        dice.inputEnabled = true;
+        dice.events.onInputDown.add(this.generateDice, this);
+        dices.push(dice);
 
-                //  Enables all kind of input actions on this image (click, etc)
-                dice.inputEnabled = true;
+        var rand3 = Math.floor(Math.random() * 6);
+        dice = game.add.sprite(gameSceneOriginX+i*50, 0, 'dices');
+        dice.frame=rand;
+        //  Enables all kind of input actions on this image (click, etc)
+        dice.inputEnabled = true;
+        dice.events.onInputDown.add(this.generateDice, this);
+        dices.push(dice);
 
-                dice.events.onInputDown.add(this.generateDice, this);
-                dices.push(dice);
-            }
+        var rand4 = Math.floor(Math.random() * 6);
+        dice = game.add.sprite(gameSceneOriginX+i*50, 0, 'dices');
+        dice.frame=rand;
+        //  Enables all kind of input actions on this image (click, etc)
+        dice.inputEnabled = true;
+        dice.events.onInputDown.add(this.generateDice, this);
+        dices.push(dice);
 
-        }
+        var rand5 = Math.floor(Math.random() * 6);
+        dice = game.add.sprite(gameSceneOriginX+i*50, 0, 'dices');
+        dice.frame=rand;
+        //  Enables all kind of input actions on this image (click, etc)
+        dice.inputEnabled = true;
+        dice.events.onInputDown.add(this.generateDice, this);
+        dices.push(dice);
 
         // itinialize player1's dices
         for (var i=0; i<grille.cols; i++){
