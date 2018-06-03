@@ -1,4 +1,4 @@
-var game = new Phaser.Game(1000, 600);
+var game = new Phaser.Game(1200, 600);
 var dice, player1Dices =[],player2Dices =[], pawn;
 var gameSceneW= 450, gameSceneH=600;
 var gameSceneOriginX = (1000-gameSceneW)/2 , gameSceneOriginY=50;
@@ -11,7 +11,7 @@ var grille = {
             // from left
             //index 1: tile color 0 = no-color , 1=red, 2=yellow, 3=black, 4=green, 5=bleu *-1 p2
             //index 2: pawn id,  0= empty,  1=red, 2=yellow, 3=black, 4=green, 5=bleu * -1 = P2
-            //index 1: bonus, 0 = empty
+            //index 3: bonus, 0 = empty
 
             matrix: [
                 [-1,-1,0], [0,0,0], [-2,-2,0], [0,0,0], [-3,-3,0], [0,0,0], [-4,-4,0], [0,0,0], [-5,-5,0],
@@ -39,8 +39,8 @@ var grille = {
 var context = {
   "grille" : grille,
   "movesLeft" : [0,0,0,0,0],
-    "currentPlayer" : 0,
-    "step" : 0,
+  "currentPlayer" : 0,
+  "step" : 0,
     "choosedColor" : 0
 };
 
@@ -65,6 +65,8 @@ var mainState = {
 
 
         game.load.image('throw', 'assets/throw.png');
+        game.load.image('state-box', 'assets/stateBox.png');
+        game.load.image('restart', 'assets/restart.png');
 
 
         // load pawns
@@ -76,11 +78,19 @@ var mainState = {
 
         //load colorPicker
 
-        game.load.image('colorPicker-red','assets/colorPickerRed.png');
-        game.load.image('colorPicker-gray','assets/colorPickerGray.png');
-        game.load.image('colorPicker-green','assets/colorPickerGreen.png');
-        game.load.image('colorPicker-yellow','assets/colorPickerYellow.png');
-        game.load.image('colorPicker-blue','assets/colorPickerBlue.png');
+        //game.load.image('colorPicker-red','assets/colorPickerRed.png');
+        //game.load.image('colorPicker-gray','assets/colorPickerGray.png');
+        //game.load.image('colorPicker-green','assets/colorPickerGreen.png');
+        //game.load.image('colorPicker-yellow','assets/colorPickerYellow.png');
+        //game.load.image('colorPicker-blue','assets/colorPickerBlue.png');
+
+        //load colorPicker
+        game.load.image('marker-red','assets/markers/markerRed.png');
+        game.load.image('marker-yellow','assets/markers/markerYellow.png');
+        game.load.image('marker-blue','assets/markers/markerBlue.png');
+        game.load.image('marker-gray','assets/markers/markerGray.png');
+        game.load.image('marker-green','assets/markers/markerGreen.png');
+
     },
 
 
@@ -95,14 +105,27 @@ var mainState = {
         game.scale.pageAlignHorizontally = true;
         game.scale.pageAlignVertically = true;
 
+
+        game.add.sprite(850, 200, 'state-box');
+
+        var restartButton = game.add.sprite(80, 200, 'restart');
+        restartButton.inputEnabled=true;
+        restartButton.events.onInputDown.add(this.restartGame, this);
+        game.add.sprite(80, 240, 'restart');
+        game.add.sprite(80, 280, 'restart');
+        game.add.sprite(80, 320, 'restart');
+
         updateText();
 
         this.labelPlayer1 = game.add.text(20, 10, "Player 1", { font: "30px Arial", fill: "#ffffff" });
         this.labelPlayer2 = game.add.text(20, 550, "Player 2", { font: "30px Arial", fill: "#ffffff" });
 
+        selector = game.add.sprite(game.world.centerX, game.world.centerY, 'marker-blue');
 
-        this.score = 0;
-        this.labelScore = game.add.text(20, 20, "0", { font: "30px Arial", fill: "#ffffff" });
+
+
+
+
 
         this.gridUpdate();
         this.initializeDices();
@@ -120,6 +143,8 @@ var mainState = {
 
 
     update: function() {
+        selector.x=game.input.x;
+        selector.y=game.input.y;
         //this.gridUpdate();
         //updateColorPicker();
     },
@@ -419,6 +444,8 @@ var mainState = {
 
 };
 
+
+
 function onTileClicked (a,b) {
 
     if (context.step===2)
@@ -464,7 +491,7 @@ function updateColorPicker() {
     if (context.step===1)
     {
         console.log("Am Here");
-        colorPickers[0] = game.add.sprite(gameSceneOriginX+500,y*20+100,'colorPicker-red');
+        colorPickers[0] = game.add.sprite(gameSceneOriginX+470,y*50+150,'bird-red');
         colorPickers[0].inputEnabled = true;
         colorPickers[0].events.onInputDown.add(function () {
             if (context.currentPlayer===0)
@@ -473,7 +500,7 @@ function updateColorPicker() {
                 chooseColor(-1);
         });
         y++;
-        colorPickers[1] = game.add.sprite(gameSceneOriginX+500,y*40+100,'colorPicker-yellow');
+        colorPickers[1] = game.add.sprite(gameSceneOriginX+470,y*50+150,'bird-yellow');
         colorPickers[1].inputEnabled = true;
         colorPickers[1].events.onInputDown.add(function () {
             if (context.currentPlayer===0)
@@ -482,7 +509,7 @@ function updateColorPicker() {
                 chooseColor(-2);
         });
         y++;
-        colorPickers[2] = game.add.sprite(gameSceneOriginX+500,y*40+100,'colorPicker-gray');
+        colorPickers[2] = game.add.sprite(gameSceneOriginX+470,y*50+150,'bird-gray');
         colorPickers[2].inputEnabled = true;
         colorPickers[2].events.onInputDown.add(function () {
             if (context.currentPlayer===0)
@@ -491,7 +518,7 @@ function updateColorPicker() {
                 chooseColor(-3);
         });
         y++;
-        colorPickers[3] = game.add.sprite(gameSceneOriginX+500,y*40+100,'colorPicker-green');
+        colorPickers[3] = game.add.sprite(gameSceneOriginX+470,y*50+150,'bird-green');
         colorPickers[3].inputEnabled = true;
         colorPickers[3].events.onInputDown.add(function () {
             if (context.currentPlayer===0)
@@ -500,7 +527,7 @@ function updateColorPicker() {
                 chooseColor(-4);
         });
         y++;
-        colorPickers[4] = game.add.sprite(gameSceneOriginX+500,y*40+100,'colorPicker-blue');
+        colorPickers[4] = game.add.sprite(gameSceneOriginX+470,y*50+150,'bird-blue');
         colorPickers[4].inputEnabled = true;
         colorPickers[4].events.onInputDown.add(function () {
             if (context.currentPlayer===0)
@@ -532,26 +559,28 @@ function updateText() {
         turnText.destroy();
     if (context.currentPlayer===0)
     {
-        turnText = game.add.text(10,200,"Turn player 1");
+        turnText = game.add.text(900,230,"Turn player 2");
     }
     else
     {
-        turnText = game.add.text(10,200,"Turn player 2");
+        turnText = game.add.text(900,230,"Turn player 1");
     }
     switch (context.step)
     {
-        case 0: stepText = game.add.text(10,250,"Throw Dice");
+        case 0: stepText = game.add.text(900,280,"Throw Dice");
             break;
-        case 1: stepText = game.add.text(10,250,"Choose color");
+        case 1: stepText = game.add.text(900,280,"Choose color");
             break;
-        case 2: stepText = game.add.text(10,250,"color tiles");
+        case 2: stepText = game.add.text(900,280,"color tiles");
             break;
-        case 3: stepText = game.add.text(10,250,"move pawn");
+        case 3: stepText = game.add.text(900,280,"move pawn");
             break;
     }
 }
 
 
+
 game.state.add('main', mainState);
 game.state.start('main');
+
 
