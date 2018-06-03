@@ -26,6 +26,18 @@ var grille = {
 
         };
 
+//movesLeft for each color
+//index 0 red
+//index 1 yellow
+//index 2 black
+//index 3 green
+//index bleu
+
+var context = {
+  "grille" : grille,
+  "movesLeft" : [0,0,0,0,0]
+};
+
 
 var mainState = {
 
