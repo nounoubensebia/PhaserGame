@@ -117,8 +117,8 @@ var mainState = {
 
 
     update: function() {
-        this.gridUpdate();
-        updateColorPicker();
+        //this.gridUpdate();
+        //updateColorPicker();
     },
 
 
@@ -395,6 +395,7 @@ var mainState = {
                 context.movesLeft[i]= this.generateDice(player1Dices[i])+1;
             }
             context.step++;
+             updateColorPicker();
          }
     },
 
@@ -405,6 +406,7 @@ var mainState = {
                 context.movesLeft[i]= this.generateDice(player2Dices[i])+1;
             }
             context.step++;
+            updateColorPicker();
         }
     }
 
@@ -425,6 +427,7 @@ function onTileClicked (a,b) {
         if (context.movesLeft[getMoveIndexFromColor(context.choosedColor)]===0)
         {
             context.step++;
+            mainState.gridUpdate();
             return;
         }
     }
@@ -439,6 +442,7 @@ function onTileClicked (a,b) {
         }
 
     }
+    mainState.gridUpdate();
     //console.log("i am clicked x = "+x+" y = "+y);
 }
 
@@ -448,13 +452,15 @@ function chooseColor(choosenColor) {
         context.choosedColor = choosenColor;
         context.step++;
     }
+    updateColorPicker();
 }
 
 function updateColorPicker() {
     var y = 0;
     if (context.step===1)
     {
-        colorPickers[0] = game.add.image(gameSceneOriginX+500,y*20+100,'colorPicker-red');
+        console.log("Am Here");
+        colorPickers[0] = game.add.sprite(gameSceneOriginX+500,y*20+100,'colorPicker-red');
         colorPickers[0].inputEnabled = true;
         colorPickers[0].events.onInputDown.add(function () {
             if (context.currentPlayer===0)
@@ -463,7 +469,7 @@ function updateColorPicker() {
                 chooseColor(-1);
         });
         y++;
-        colorPickers[1] = game.add.image(gameSceneOriginX+500,y*40+100,'colorPicker-yellow');
+        colorPickers[1] = game.add.sprite(gameSceneOriginX+500,y*40+100,'colorPicker-yellow');
         colorPickers[1].inputEnabled = true;
         colorPickers[1].events.onInputDown.add(function () {
             if (context.currentPlayer===0)
@@ -472,7 +478,7 @@ function updateColorPicker() {
                 chooseColor(-2);
         });
         y++;
-        colorPickers[2] = game.add.image(gameSceneOriginX+500,y*40+100,'colorPicker-gray');
+        colorPickers[2] = game.add.sprite(gameSceneOriginX+500,y*40+100,'colorPicker-gray');
         colorPickers[2].inputEnabled = true;
         colorPickers[2].events.onInputDown.add(function () {
             if (context.currentPlayer===0)
@@ -481,7 +487,7 @@ function updateColorPicker() {
                 chooseColor(-3);
         });
         y++;
-        colorPickers[3] = game.add.image(gameSceneOriginX+500,y*40+100,'colorPicker-green');
+        colorPickers[3] = game.add.sprite(gameSceneOriginX+500,y*40+100,'colorPicker-green');
         colorPickers[3].inputEnabled = true;
         colorPickers[3].events.onInputDown.add(function () {
             if (context.currentPlayer===0)
@@ -490,7 +496,7 @@ function updateColorPicker() {
                 chooseColor(-4);
         });
         y++;
-        colorPickers[4] = game.add.image(gameSceneOriginX+500,y*40+100,'colorPicker-blue');
+        colorPickers[4] = game.add.sprite(gameSceneOriginX+500,y*40+100,'colorPicker-blue');
         colorPickers[4].inputEnabled = true;
         colorPickers[4].events.onInputDown.add(function () {
             if (context.currentPlayer===0)
@@ -499,6 +505,14 @@ function updateColorPicker() {
                 chooseColor(-5);
         });
         y++;
+    }
+    else
+    {
+        if (colorPickers.length>0)
+        for (var i = 0;i<5;i++)
+        {
+                colorPickers[i].destroy();
+        }
     }
 }
 
