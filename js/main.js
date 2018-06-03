@@ -79,15 +79,15 @@ var mainState = {
         game.scale.pageAlignHorizontally = true;
         game.scale.pageAlignVertically = true;
 
-<<<<<<< HEAD
+
 
         this.labelPlayer1 = game.add.text(20, 10, "Player 1", { font: "30px Arial", fill: "#ffffff" });
         this.labelPlayer2 = game.add.text(20, 550, "Player 2", { font: "30px Arial", fill: "#ffffff" });
 
-=======
+
         this.score = 0;
         this.labelScore = game.add.text(20, 20, "0", { font: "30px Arial", fill: "#ffffff" });
->>>>>>> origin/master
+
         this.gridUpdate();
         this.initializeDices();
 
