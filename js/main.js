@@ -35,7 +35,8 @@ var grille = {
 
 var context = {
   "grille" : grille,
-  "movesLeft" : [0,0,0,0,0]
+  "movesLeft" : [0,0,0,0,0],
+    "currentPlayer" : 0
 };
 
 
