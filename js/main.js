@@ -38,7 +38,8 @@ var context = {
   "grille" : grille,
   "movesLeft" : [0,0,0,0,0],
     "currentPlayer" : 0,
-    "step" : 0
+    "step" : 0,
+    "choosedColor" : 0
 };
 
 
@@ -125,7 +126,6 @@ var mainState = {
     generateDice: function(sprite){
         var rand = Math.floor(Math.random() * 6);
         sprite.frame = rand;
-
     },
 
 
@@ -410,7 +410,37 @@ var mainState = {
 
 function onTileClicked (a,b) {
 
+    if (context.step===2)
+    {
+        if (canBeColored(a,b,context.choosedColor,context))
+        {
+            color(a,b,context.choosedColor,context);
+        }
+        if (context.movesLeft[getMoveIndexFromColor(context.choosedColor)]===0)
+        {
+            context.step++;
+            return;
+        }
+    }
+
+    if (context.step===3)
+    {
+        if (canPawnMove(a,b,context.choosedColor,context))
+        {
+            movePawn(a,b,context.choosedColor,context);
+        }
+        context.currentPlayer = 1-context.currentPlayer;
+        context.step=0;
+    }
     //console.log("i am clicked x = "+x+" y = "+y);
+}
+
+function chooseColor(choosenColor) {
+    if (context.step===2)
+    {
+        context.step++;
+        context.choosedColor = choosenColor;
+    }
 }
 
 game.state.add('main', mainState);
