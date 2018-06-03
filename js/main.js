@@ -33,10 +33,12 @@ var grille = {
 //index 3 green
 //index 4 bleu
 
+//step =0 if at throwingDices phase =1 if at selecting colors phase =2 if at coloring tiles phase =3 if at moving pawn phase
 var context = {
   "grille" : grille,
   "movesLeft" : [0,0,0,0,0],
-    "currentPlayer" : 0
+    "currentPlayer" : 0,
+    "step" : 0
 };
 
 
@@ -160,44 +162,50 @@ var mainState = {
                         this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pipe');
                         break;
                 }*/
-
+                var image;
                 switch(grille.matrix[index][0]) {
                     case 0:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY,'bird');
+                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY,'bird');
                         break;
                     case 1:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-red');
+                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-red');
                         break;
                     case 2:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-yellow');
+                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-yellow');
                         break;
                     case 3:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-gray');
+                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-gray');
                         break;
                     case 4:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-green');
+                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-green');
                         break;
                     case 5:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-blue');
+                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-blue');
                         break;
                     case -1:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-red');
+                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-red');
                         break;
                     case -2:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-yellow');
+                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-yellow');
                         break;
                     case -3:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-gray');
+                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-gray');
                         break;
                     case -4:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-green');
+                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-green');
                         break;
                     case -5:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-blue');
+                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-blue');
                         break;
 
 
                 }
+                const a = r;
+                const b = c;
+                image.inputEnabled = true;
+                image.events.onInputDown.add(function () {
+                    onTileClicked(a,b);
+                },this);
 
                 switch(grille.matrix[index][1]) {
 
@@ -375,14 +383,22 @@ var mainState = {
     },
 
     throwPlayer1Dices: function(){
-        for (var i=0; i<player1Dices.length; i++){
-            this.generateDice(player1Dices[i]);
-        }
+         if (context.step===0&&context.currentPlayer===0)
+         {
+            for (var i=0; i<player1Dices.length; i++){
+                this.generateDice(player1Dices[i]);
+            }
+            context.step++;
+         }
     },
 
     throwPlayer2Dices: function(){
-        for (var i=0; i<player2Dices.length; i++){
-            this.generateDice(player2Dices[i]);
+        if (context.step===0&&context.currentPlayer===1)
+        {
+            for (var i=0; i<player2Dices.length; i++){
+                this.generateDice(player2Dices[i]);
+            }
+            context.step++;
         }
     }
 
@@ -392,5 +408,11 @@ var mainState = {
 
 };
 
+function onTileClicked (a,b) {
+
+    //console.log("i am clicked x = "+x+" y = "+y);
+}
+
 game.state.add('main', mainState);
 game.state.start('main');
+
