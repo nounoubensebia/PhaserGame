@@ -12,7 +12,7 @@ var grille = {
             //index 1: bonus, 0 = empty
 
             matrix: [
-                [1,-1,0], [0,0,0], [0,-2,0], [0,0,0], [0,-3,0], [0,0,0], [0,-4,0], [0,0,0], [0,-5,0],
+                [-1,-1,0], [0,0,0], [-2,-2,0], [0,0,0], [-3,-3,0], [0,0,0], [-4,-4,0], [0,0,0], [-5,-5,0],
                 [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
                 [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
                 [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
@@ -21,7 +21,7 @@ var grille = {
                 [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
                 [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
                 [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
-                [0,1,0], [0,0,0], [0,2,0], [0,0,0], [0,3,0], [0,0,0], [0,4,0], [0,0,0], [0,5,0],
+                [1,1,0], [0,0,0], [2,2,0], [0,0,0], [3,3,0], [0,0,0], [4,4,0], [0,0,0], [5,5,0],
             ]
 
         };
@@ -52,6 +52,12 @@ var mainState = {
         game.load.spritesheet('dices-yellow', 'assets/Dices-yellow.png', 50, 50, 6);
 
         game.load.image('bird', 'assets/bird.png');
+        game.load.image('bird-red', 'assets/bird-red.png');
+        game.load.image('bird-yellow', 'assets/bird-yellow.png');
+        game.load.image('bird-green', 'assets/bird-green.png');
+        game.load.image('bird-blue', 'assets/bird-blue.png');
+        game.load.image('bird-gray', 'assets/bird-gray.png');
+
 
         game.load.image('throw', 'assets/throw.png');
 
@@ -104,7 +110,7 @@ var mainState = {
 
 
     update: function() {
-
+        this.gridUpdate();
     },
 
 
@@ -134,7 +140,7 @@ var mainState = {
                  //index 2: pawn id,  0= empty,  1=red, 2=yellow, 3=black, 4=green, 5=bleu * -1 = P2
                  //index 3: bonus, 0 = empty
 
-                switch(grille.matrix[index][0]) {
+                /*switch(grille.matrix[index][0]) {
                     case 0:
                         this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird');
                         break;
@@ -153,6 +159,44 @@ var mainState = {
                     case 5:
                         this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pipe');
                         break;
+                }*/
+
+                switch(grille.matrix[index][0]) {
+                    case 0:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY,'bird');
+                        break;
+                    case 1:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-red');
+                        break;
+                    case 2:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-yellow');
+                        break;
+                    case 3:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-gray');
+                        break;
+                    case 4:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-green');
+                        break;
+                    case 5:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-blue');
+                        break;
+                    case -1:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-red');
+                        break;
+                    case -2:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-yellow');
+                        break;
+                    case -3:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-gray');
+                        break;
+                    case -4:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-green');
+                        break;
+                    case -5:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-blue');
+                        break;
+
+
                 }
 
                 switch(grille.matrix[index][1]) {
@@ -195,20 +239,7 @@ var mainState = {
                 }
 
 
-                switch(grille.matrix[index][2]) {
-                    case 1:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird');
-                        break;
-                    case 2:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pipe');
-                        break;
-                    case 3:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird');
-                        break;
-                    case 4:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pipe');
-                        break;
-                }
+
 
             }
         }

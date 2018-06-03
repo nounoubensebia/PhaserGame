@@ -60,13 +60,106 @@ function getMoveIndexFromColor(color) {
 }
 
 function color(x, y, color, context) {
-    context.grille.matrix[x*context.grille.cols+y][0] = color;
     var moveIndex = getMoveIndexFromColor(color);
-    context.movesLeft[moveIndex]--;
+    if (getElementAt(x,y,context.grille)[0]!==0)
+    {
+        //console.log("is"+getElementAt(x,y,context.grille));
+        context.movesLeft[moveIndex]-=2;
+    }
+    else
+    {
+        context.movesLeft[moveIndex]--;
+    }
+    context.grille.matrix[x*context.grille.cols+y][0] = color;
+
+}
+
+function movePawn(x, y, color, context) {
+    var pawnLocation = getPawnLocation(color,context.grille);
+    context.grille.matrix[pawnLocation.x*context.grille.cols+pawnLocation.y][1]=0;
+    context.grille.matrix[x*context.grille.cols+y][1]=color;
+}
+
+function canPawnMove(x, y,color,context) {
+
+    if (getElementAt(x,y,context.grille)[0]!==color&&getElementAt(x,y,context.grille)[0]!==-1*color)
+    {
+        return false;
+    }
+    if (getElementAt(x,y,context.grille)[1]!==0)
+    {
+        return false;
+    }
+    else
+    {
+        var tab = getAdjacentTilesPawns(context.grille,x,y);
+        var found = false;
+        for (var i=0;i<tab.length;i++)
+        {
+            if (tab[i]===color)
+            {
+                found = true;
+            }
+        }
+        return found;
+    }
 }
 
 function getElementAt(i,j,grille) {
     return grille.matrix[i*grille.cols+j];
+}
+
+
+
+function getPawnLocation(color,grille) {
+    for (var i = 0;i<grille.rows;i++)
+    {
+        for (var j=0;j<grille.cols;j++)
+        {
+            if (getElementAt(i,j,grille)[1]===color)
+            {
+                return {"x" : i
+                    ,"y" : j};
+            }
+        }
+    }
+}
+
+function getAdjacentTilesPawns(grille, i, j) {
+    var tab = [];
+    if (i+1<grille.rows)
+    {
+        tab.push(getElementAt(i+1,j,grille)[1]);
+    }
+    if (j+1<grille.cols)
+    {
+        tab.push(getElementAt(i,j+1,grille)[1]);
+    }
+    if (i+1<grille.rows&&j+1<grille.cols)
+    {
+        tab.push(getElementAt(i+1,j+1,grille)[1]);
+    }
+    if (i-1>=0)
+    {
+        tab.push(getElementAt(i-1,j,grille)[1]);
+    }
+    if (j-1>=0)
+    {
+        tab.push(getElementAt(i,j-1,grille)[1]);
+    }
+    if (i-1>=0&&j-1>=0)
+    {
+        tab.push(getElementAt(i-1,j-1,grille)[1]);
+    }
+    if (i-1>=0&&j+1<grille.cols)
+    {
+        tab.push(getElementAt(i-1,j+1,grille)[1]);
+    }
+    if (i+1<grille.rows&&j-1>=0)
+    {
+        tab.push(getElementAt(i+1,j-1,grille)[1]);
+    }
+    return tab;
 }
 
 function getAdjacentTilesColors(grille, i, j) {
