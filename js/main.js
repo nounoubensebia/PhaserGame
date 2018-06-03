@@ -12,7 +12,7 @@ var grille = {
             //index 1: bonus, 0 = empty
 
             matrix: [
-                [0,-1,0], [0,0,0], [0,-2,0], [0,0,0], [0,-3,0], [0,0,0], [0,-4,0], [0,0,0], [0,-5,0],
+                [1,-1,0], [0,0,0], [0,-2,0], [0,0,0], [0,-3,0], [0,0,0], [0,-4,0], [0,0,0], [0,-5,0],
                 [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
                 [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
                 [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
@@ -31,13 +31,14 @@ var grille = {
 //index 1 yellow
 //index 2 black
 //index 3 green
-//index bleu
+//index 4 bleu
 
 var context = {
   "grille" : grille,
   "movesLeft" : [0,0,0,0,0],
     "currentPlayer" : 0
 };
+
 
 
 var mainState = {
@@ -72,7 +73,6 @@ var mainState = {
 
         this.score = 0;
         this.labelScore = game.add.text(20, 20, "0", { font: "30px Arial", fill: "#ffffff" });
-
         this.gridUpdate();
         this.initializeDices();
         //this.initializePawns();
