@@ -2,7 +2,7 @@ var game = new Phaser.Game(1000, 600);
 var dice, player1Dices =[],player2Dices =[], pawn;
 var gameSceneW= 450, gameSceneH=600;
 var gameSceneOriginX = (1000-gameSceneW)/2 , gameSceneOriginY=50;
-
+var colorPickers = [];
 var grille = {
             cols: 9,
             rows: 10,
@@ -72,9 +72,13 @@ var mainState = {
         game.load.image('pawn-blue', 'assets/pawn-blue.png');
         game.load.image('pawn-red', 'assets/pawn-red.png');
 
+        //load colorPicker
 
-
-
+        game.load.image('colorPicker-red','assets/colorPickerRed.png');
+        game.load.image('colorPicker-gray','assets/colorPickerGray.png');
+        game.load.image('colorPicker-green','assets/colorPickerGreen.png');
+        game.load.image('colorPicker-yellow','assets/colorPickerYellow.png');
+        game.load.image('colorPicker-blue','assets/colorPickerBlue.png');
     },
 
 
@@ -114,6 +118,7 @@ var mainState = {
 
     update: function() {
         this.gridUpdate();
+        updateColorPicker();
     },
 
 
@@ -126,6 +131,7 @@ var mainState = {
     generateDice: function(sprite){
         var rand = Math.floor(Math.random() * 6);
         sprite.frame = rand;
+        return rand;
     },
 
 
@@ -386,7 +392,7 @@ var mainState = {
          if (context.step===0&&context.currentPlayer===0)
          {
             for (var i=0; i<player1Dices.length; i++){
-                this.generateDice(player1Dices[i]);
+                context.movesLeft[i]= this.generateDice(player1Dices[i])+1;
             }
             context.step++;
          }
@@ -396,7 +402,7 @@ var mainState = {
         if (context.step===0&&context.currentPlayer===1)
         {
             for (var i=0; i<player2Dices.length; i++){
-                this.generateDice(player2Dices[i]);
+                context.movesLeft[i]= this.generateDice(player2Dices[i])+1;
             }
             context.step++;
         }
@@ -428,18 +434,71 @@ function onTileClicked (a,b) {
         if (canPawnMove(a,b,context.choosedColor,context))
         {
             movePawn(a,b,context.choosedColor,context);
+            context.currentPlayer = 1-context.currentPlayer;
+            context.step=0;
         }
-        context.currentPlayer = 1-context.currentPlayer;
-        context.step=0;
+
     }
     //console.log("i am clicked x = "+x+" y = "+y);
 }
 
 function chooseColor(choosenColor) {
-    if (context.step===2)
+    if (context.step===1)
     {
-        context.step++;
         context.choosedColor = choosenColor;
+        context.step++;
+    }
+}
+
+function updateColorPicker() {
+    var y = 0;
+    if (context.step===1)
+    {
+        colorPickers[0] = game.add.image(gameSceneOriginX+500,y*20+100,'colorPicker-red');
+        colorPickers[0].inputEnabled = true;
+        colorPickers[0].events.onInputDown.add(function () {
+            if (context.currentPlayer===0)
+                chooseColor(1);
+            else
+                chooseColor(-1);
+        });
+        y++;
+        colorPickers[1] = game.add.image(gameSceneOriginX+500,y*40+100,'colorPicker-yellow');
+        colorPickers[1].inputEnabled = true;
+        colorPickers[1].events.onInputDown.add(function () {
+            if (context.currentPlayer===0)
+                chooseColor(2);
+            else
+                chooseColor(-2);
+        });
+        y++;
+        colorPickers[2] = game.add.image(gameSceneOriginX+500,y*40+100,'colorPicker-gray');
+        colorPickers[2].inputEnabled = true;
+        colorPickers[2].events.onInputDown.add(function () {
+            if (context.currentPlayer===0)
+                chooseColor(3);
+            else
+                chooseColor(-3);
+        });
+        y++;
+        colorPickers[3] = game.add.image(gameSceneOriginX+500,y*40+100,'colorPicker-green');
+        colorPickers[3].inputEnabled = true;
+        colorPickers[3].events.onInputDown.add(function () {
+            if (context.currentPlayer===0)
+                chooseColor(4);
+            else
+                chooseColor(-4);
+        });
+        y++;
+        colorPickers[4] = game.add.image(gameSceneOriginX+500,y*40+100,'colorPicker-blue');
+        colorPickers[4].inputEnabled = true;
+        colorPickers[4].events.onInputDown.add(function () {
+            if (context.currentPlayer===0)
+                chooseColor(5);
+            else
+                chooseColor(-5);
+        });
+        y++;
     }
 }
 
