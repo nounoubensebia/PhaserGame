@@ -2,6 +2,8 @@ var game = new Phaser.Game(1000, 600);
 var dice, player1Dices =[],player2Dices =[], pawn;
 var gameSceneW= 450, gameSceneH=600;
 var gameSceneOriginX = (1000-gameSceneW)/2 , gameSceneOriginY=50;
+var stepText;
+var turnText;
 var colorPickers = [];
 var grille = {
             cols: 9,
@@ -84,6 +86,7 @@ var mainState = {
 
 
     create: function() {
+
         /*if(!game.device.desktop) {
             game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
             game.scale.setMinMax(game.width/2, game.height/2, game.width, game.height);
@@ -92,7 +95,7 @@ var mainState = {
         game.scale.pageAlignHorizontally = true;
         game.scale.pageAlignVertically = true;
 
-
+        updateText();
 
         this.labelPlayer1 = game.add.text(20, 10, "Player 1", { font: "30px Arial", fill: "#ffffff" });
         this.labelPlayer2 = game.add.text(20, 550, "Player 2", { font: "30px Arial", fill: "#ffffff" });
@@ -394,7 +397,7 @@ var mainState = {
             for (var i=0; i<player1Dices.length; i++){
                 context.movesLeft[i]= this.generateDice(player1Dices[i])+1;
             }
-            context.step++;
+            updateStep(context.step+1);
              updateColorPicker();
          }
     },
@@ -405,7 +408,7 @@ var mainState = {
             for (var i=0; i<player2Dices.length; i++){
                 context.movesLeft[i]= this.generateDice(player2Dices[i])+1;
             }
-            context.step++;
+            updateStep(context.step+1);
             updateColorPicker();
         }
     }
@@ -426,7 +429,7 @@ function onTileClicked (a,b) {
         }
         if (context.movesLeft[getMoveIndexFromColor(context.choosedColor)]===0)
         {
-            context.step++;
+            updateStep(context.step+1);
             mainState.gridUpdate();
             return;
         }
@@ -438,11 +441,12 @@ function onTileClicked (a,b) {
         {
             movePawn(a,b,context.choosedColor,context);
             context.currentPlayer = 1-context.currentPlayer;
-            context.step=0;
+            updateStep(0);
         }
 
     }
     mainState.gridUpdate();
+
     //console.log("i am clicked x = "+x+" y = "+y);
 }
 
@@ -450,7 +454,7 @@ function chooseColor(choosenColor) {
     if (context.step===1)
     {
         context.choosedColor = choosenColor;
-        context.step++;
+        updateStep(context.step+1);
     }
     updateColorPicker();
 }
@@ -515,6 +519,38 @@ function updateColorPicker() {
         }
     }
 }
+
+function updateStep(newStep) {
+    context.step = newStep;
+    updateText();
+}
+
+function updateText() {
+    if (stepText)
+        stepText.destroy();
+    if (turnText)
+        turnText.destroy();
+    if (context.currentPlayer===0)
+    {
+        turnText = game.add.text(10,200,"Turn player 1");
+    }
+    else
+    {
+        turnText = game.add.text(10,200,"Turn player 2");
+    }
+    switch (context.step)
+    {
+        case 0: stepText = game.add.text(10,250,"Throw Dice");
+            break;
+        case 1: stepText = game.add.text(10,250,"Choose color");
+            break;
+        case 2: stepText = game.add.text(10,250,"color tiles");
+            break;
+        case 3: stepText = game.add.text(10,250,"move pawn");
+            break;
+    }
+}
+
 
 game.state.add('main', mainState);
 game.state.start('main');
