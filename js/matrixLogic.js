@@ -198,3 +198,36 @@ function getAdjacentTilesColors(grille, i, j) {
     }
     return tab;
 }
+
+function isPawnAtEnd(pawn,context) {
+    if (pawn<0)
+    {
+        return getPawnLocation(pawn, context.grille).x === (context.grille.rows) - 1;
+    }
+    else
+    {
+        return getPawnLocation(pawn, context.grille).x === 0;
+    }
+}
+
+function existsToBeColored(color, context) {
+    for (var i=0;i<context.grille.rows;i++)
+    {
+
+        for (var j=0;j<context.grille.cols;j++)
+        {
+            console.log("i : "+i+"j : "+j);
+            if (canBeColored(i,j,color,context))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function deletePawn(pawn,context) {
+    var ob = getPawnLocation(pawn,context.grille);
+    context.grille.matrix[ob.x*context.grille.cols+ob.y][1]=0;
+    mainState.gridUpdate();
+}

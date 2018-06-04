@@ -4,6 +4,8 @@ var gameSceneW= 450, gameSceneH=600;
 var gameSceneOriginX = (1000-gameSceneW)/2 , gameSceneOriginY=50;
 var stepText;
 var turnText;
+var player1ScoreText;
+var player2ScoreText;
 var colorPickers = [];
 var grille = {
             cols: 9,
@@ -41,7 +43,11 @@ var context = {
   "movesLeft" : [0,0,0,0,0],
   "currentPlayer" : 0,
   "step" : 0,
-    "choosedColor" : 0
+    "choosedColor" : 0,
+    "pawnMovesLeft" : 2,
+    "deletedColors" : [],
+    "player1Score" : 0,
+    "player2Score" : 0
 };
 
 
@@ -116,6 +122,7 @@ var mainState = {
         game.add.sprite(80, 320, 'restart');
 
         updateText();
+        updateScoreText();
 
         this.labelPlayer1 = game.add.text(20, 10, "Player 1", { font: "30px Arial", fill: "#ffffff" });
         this.labelPlayer2 = game.add.text(20, 550, "Player 2", { font: "30px Arial", fill: "#ffffff" });
@@ -453,6 +460,12 @@ function onTileClicked (a,b) {
         if (canBeColored(a,b,context.choosedColor,context))
         {
             color(a,b,context.choosedColor,context);
+            if (!existsToBeColored(context.choosedColor,context))
+            {
+               updateStep(3);
+               mainState.gridUpdate();
+               return;
+            }
         }
         if (context.movesLeft[getMoveIndexFromColor(context.choosedColor)]===0)
         {
@@ -467,8 +480,31 @@ function onTileClicked (a,b) {
         if (canPawnMove(a,b,context.choosedColor,context))
         {
             movePawn(a,b,context.choosedColor,context);
-            context.currentPlayer = 1-context.currentPlayer;
-            updateStep(0);
+            context.pawnMovesLeft--;
+
+            if (isPawnAtEnd(context.choosedColor,context))
+            {
+                removeColorFromGame(context.choosedColor);
+                if (context.currentPlayer===0)
+                {
+                    updateScore(context.player1Score+1,context.player2Score);
+                }
+                else
+                {
+                    updateScore(context.player1Score,context.player2Score+1);
+                }
+                context.currentPlayer = 1-context.currentPlayer;
+                updateStep(0);
+            }
+            else
+            {
+                if (context.pawnMovesLeft===0)
+                {
+                    context.currentPlayer = 1-context.currentPlayer;
+                    updateStep(0);
+                }
+            }
+
         }
 
     }
@@ -486,56 +522,111 @@ function chooseColor(choosenColor) {
     updateColorPicker();
 }
 
+function removeColorFromGame(color) {
+    context.deletedColors.push(color);
+    updateColorPicker();
+    deletePawn(color,context);
+}
+
+function isColorEnabled(color) {
+    if (context.currentPlayer===0)
+    {
+        return !context.deletedColors.includes(color);
+    }
+    else
+    {
+        return !context.deletedColors.includes(-color);
+    }
+}
+
 function updateColorPicker() {
     var y = 0;
     if (context.step===1)
     {
-        console.log("Am Here");
-        colorPickers[0] = game.add.sprite(gameSceneOriginX+470,y*50+150,'bird-red');
-        colorPickers[0].inputEnabled = true;
-        colorPickers[0].events.onInputDown.add(function () {
-            if (context.currentPlayer===0)
-                chooseColor(1);
-            else
-                chooseColor(-1);
-        });
-        y++;
-        colorPickers[1] = game.add.sprite(gameSceneOriginX+470,y*50+150,'bird-yellow');
-        colorPickers[1].inputEnabled = true;
-        colorPickers[1].events.onInputDown.add(function () {
-            if (context.currentPlayer===0)
-                chooseColor(2);
-            else
-                chooseColor(-2);
-        });
-        y++;
-        colorPickers[2] = game.add.sprite(gameSceneOriginX+470,y*50+150,'bird-gray');
-        colorPickers[2].inputEnabled = true;
-        colorPickers[2].events.onInputDown.add(function () {
-            if (context.currentPlayer===0)
-                chooseColor(3);
-            else
-                chooseColor(-3);
-        });
-        y++;
-        colorPickers[3] = game.add.sprite(gameSceneOriginX+470,y*50+150,'bird-green');
-        colorPickers[3].inputEnabled = true;
-        colorPickers[3].events.onInputDown.add(function () {
-            if (context.currentPlayer===0)
-                chooseColor(4);
-            else
-                chooseColor(-4);
-        });
-        y++;
-        colorPickers[4] = game.add.sprite(gameSceneOriginX+470,y*50+150,'bird-blue');
-        colorPickers[4].inputEnabled = true;
-        colorPickers[4].events.onInputDown.add(function () {
-            if (context.currentPlayer===0)
-                chooseColor(5);
-            else
-                chooseColor(-5);
-        });
-        y++;
+        if (isColorEnabled(1)) {
+            colorPickers[0] = game.add.sprite(gameSceneOriginX + 470, y * 50 + 150, 'bird-red');
+            colorPickers[0].inputEnabled = true;
+            colorPickers[0].events.onInputDown.add(function () {
+                if (context.currentPlayer === 0)
+                    chooseColor(1);
+                else
+                    chooseColor(-1);
+            });
+            y++;
+        }
+        else
+        {
+            if (colorPickers.length>0&&colorPickers[0]!==null)
+            colorPickers[0].destroy();
+        }
+        if (isColorEnabled(2))
+        {
+            colorPickers[1] = game.add.sprite(gameSceneOriginX+470,y*50+150,'bird-yellow');
+            colorPickers[1].inputEnabled = true;
+            colorPickers[1].events.onInputDown.add(function () {
+                if (context.currentPlayer===0)
+                    chooseColor(2);
+                else
+                    chooseColor(-2);
+            });
+            y++;
+        }
+        else
+        {
+            if (colorPickers.length>0&&colorPickers[1]!==null)
+            colorPickers[1].destroy();
+        }
+        if (isColorEnabled(3))
+        {
+            colorPickers[2] = game.add.sprite(gameSceneOriginX+470,y*50+150,'bird-gray');
+            colorPickers[2].inputEnabled = true;
+            colorPickers[2].events.onInputDown.add(function () {
+                if (context.currentPlayer===0)
+                    chooseColor(3);
+                else
+                    chooseColor(-3);
+            });
+            y++;
+        }
+        else
+        {
+            if (colorPickers.length>0&&colorPickers[2]!==null)
+            colorPickers[2].destroy();
+        }
+        if (isColorEnabled(3))
+        {
+            colorPickers[3] = game.add.sprite(gameSceneOriginX+470,y*50+150,'bird-green');
+            colorPickers[3].inputEnabled = true;
+            colorPickers[3].events.onInputDown.add(function () {
+                if (context.currentPlayer===0)
+                    chooseColor(4);
+                else
+                    chooseColor(-4);
+            });
+            y++;
+        }
+        else
+        {
+            if (colorPickers.length>0&&colorPickers[3]!==null)
+            colorPickers[3].destroy();
+        }
+        if (isColorEnabled(4))
+        {
+            colorPickers[4] = game.add.sprite(gameSceneOriginX+470,y*50+150,'bird-blue');
+            colorPickers[4].inputEnabled = true;
+            colorPickers[4].events.onInputDown.add(function () {
+                if (context.currentPlayer===0)
+                    chooseColor(5);
+                else
+                    chooseColor(-5);
+            });
+            y++;
+        }
+        else
+        {
+            if (colorPickers.length>0&&colorPickers[4]!==null)
+                colorPickers[4].destroy();
+        }
     }
     else
     {
@@ -549,6 +640,20 @@ function updateColorPicker() {
 
 function updateStep(newStep) {
     context.step = newStep;
+
+    if (newStep===2)
+    {
+        if (!existsToBeColored(context.choosedColor,context))
+        {
+            updateStep(3);
+            return;
+        }
+    }
+
+    if (newStep===3)
+    {
+        context.pawnMovesLeft = 2;
+    }
     updateText();
 }
 
@@ -578,7 +683,36 @@ function updateText() {
     }
 }
 
+function updateScore(newScorePlayer1, newScorePlayer2) {
+    context.player1Score = newScorePlayer1;
+    context.player2Score = newScorePlayer2;
+    if (newScorePlayer1===5)
+    {
+        alert("player 1 has won");
+    }
+    else
+    {
 
+    }
+    if (newScorePlayer2===5)
+    {
+        alert("player 2 has won");
+    }
+    else
+    {
+
+    }
+    updateScoreText();
+}
+
+function updateScoreText() {
+    if (player1ScoreText)
+        player1ScoreText.destroy();
+    if (player2ScoreText)
+        player2ScoreText.destroy();
+    player1ScoreText = game.add.text(20,100,"Score Player 1 : "+context.player1Score);
+    player2ScoreText = game.add.text(20,500,"Score Player 2 : "+context.player2Score);
+}
 
 game.state.add('main', mainState);
 game.state.start('main');
