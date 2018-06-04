@@ -246,6 +246,21 @@ function pawnExistsMove(pawn, context) {
     return false;
 }
 
+
+function isKillBonus(i, j, context) {
+    return (context.grille.matrix[i*context.grille.cols+j][2]===2);
+}
+
+function movePawnToInitialLocation(pawn,context,initialGrille) {
+    deletePawn(pawn,context);
+    var pos = getPawnInitialPosition(pawn,initialGrille);
+    context.grille.matrix[pos.x*grille.cols+pos.y][1] = pawn;
+}
+
+function getPawnInitialPosition(pawn,initGrille) {
+    return getPawnLocation(pawn,initGrille);
+}
+
 function isDoubleBonus(i, j, context) {
     return (context.grille.matrix[i*context.grille.cols+j][2]===3);
 }

@@ -7,6 +7,32 @@ var turnText;
 var player1ScoreText;
 var player2ScoreText;
 var colorPickers = [];
+var previousStep;
+
+
+var initGrille = {
+    cols: 9,
+    rows: 10,
+    // from left
+    //index 1: tile color 0 = no-color , 1=red, 2=yellow, 3=black, 4=green, 5=bleu *-1 p2
+    //index 2: pawn id,  0= empty,  1=red, 2=yellow, 3=black, 4=green, 5=bleu * -1 = P2
+    //index 3: bonus, 0 = empty
+
+    matrix: [
+        [-1,-1,0], [0,0,0], [-2,-2,0], [0,0,0], [-3,-3,0], [0,0,0], [-4,-4,0], [0,0,0], [-5,-5,0],
+        [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
+        [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,3], [0,0,0], [0,0,1], [0,0,0],
+        [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,3],
+        [0,0,2], [0,0,0], [0,0,1], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
+        [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,1], [0,0,0],
+        [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
+        [0,0,1], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
+        [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,3],
+        [1,1,0], [0,0,0], [2,2,0], [0,0,0], [3,3,0], [0,0,0], [4,4,0], [0,0,0], [5,5,0],
+    ]
+
+};
+
 var grille = {
     cols: 9,
     rows: 10,
@@ -37,7 +63,7 @@ var grille = {
 //index 3 green
 //index 4 bleu
 
-//step =0 if at throwingDices phase =1 if at selecting colors phase =2 if at coloring tiles phase =3 if at moving pawn phase
+//step =0 if at throwingDices phase =1 if at selecting colors phase =2 if at coloring tiles phase =3 if at moving pawn phase =6 kill bonus
 var context = {
     "grille" : grille,
     "movesLeft" : [0,0,0,0,0],
@@ -497,6 +523,21 @@ function onTileClicked (a,b) {
                 context.isDoubleTurn=true;
                 context.grille.matrix[context.grille.cols*a+b][2]=0;
             }
+            if (isKillBonus(a,b,context))
+            {
+                context.grille.matrix[context.grille.cols*a+b][2]=0;
+                updateStep(6);
+                mainState.gridUpdate();
+                if (context.pawnMovesLeft===0)
+                {
+                    previousStep=0;
+                }
+                else
+                {
+                    previousStep=3;
+                }
+                return;
+            }
             if (pawnExistsMove(context.choosedColor,context))
             {
                 if (isPawnAtEnd(context.choosedColor,context))
@@ -529,6 +570,21 @@ function onTileClicked (a,b) {
             }
         }
 
+    }
+
+    if (context.step===6)
+    {
+        var s = getElementAt(a,b,context.grille)[1];
+        if (s>0&&context.currentPlayer===1)
+        {
+            movePawnToInitialLocation(s,context,initGrille);
+            updateStep(previousStep);
+        }
+        if (s<0&&context.currentPlayer===0)
+        {
+            movePawnToInitialLocation(s,context,initGrille);
+            updateStep(previousStep);
+        }
     }
     mainState.gridUpdate();
 
@@ -672,6 +728,7 @@ function updateColorPicker() {
 }
 
 function updateStep(newStep) {
+    var prevStep = context.step;
     context.step = newStep;
 
     if (newStep===2)
@@ -683,7 +740,7 @@ function updateStep(newStep) {
         }
     }
 
-    if (newStep===3)
+    if (newStep===3&&prevStep!==6)
     {
         context.pawnMovesLeft = 2;
     }
@@ -712,6 +769,8 @@ function updateText() {
         case 2: stepText = game.add.text(900,280,"color tiles");
             break;
         case 3: stepText = game.add.text(900,280,"move pawn");
+            break;
+        case 6: stepText = game.add.text(900,280,"Choose an enemy to move it back to its initial position");
             break;
     }
 }
