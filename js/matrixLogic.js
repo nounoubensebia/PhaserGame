@@ -1,6 +1,6 @@
 function canBeColored(x, y, color, context) {
     var matrix = context.grille.matrix;
-    if (getElementAt(x,y,context.grille)[1]===1)
+    if (getElementAt(x,y,context.grille)[1]!==0)
     {
         return false;
     }
@@ -81,6 +81,7 @@ function movePawn(x, y, color, context) {
     if (isAdditionalStepsBonus(x,y,context))
     {
         context.pawnMovesLeft+=2;
+        context.grille.matrix[x*context.grille.cols+y][2]=0;
     }
 }
 
@@ -243,6 +244,10 @@ function pawnExistsMove(pawn, context) {
         }
     }
     return false;
+}
+
+function isDoubleBonus(i, j, context) {
+    return (context.grille.matrix[i*context.grille.cols+j][2]===3);
 }
 
 function isAdditionalStepsBonus(x,y,context) {

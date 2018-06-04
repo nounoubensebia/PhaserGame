@@ -47,7 +47,8 @@ var context = {
     "pawnMovesLeft" : 2,
     "deletedColors" : [],
     "player1Score" : 0,
-    "player2Score" : 0
+    "player2Score" : 0,
+    "isDoubleTurn" : false
 };
 
 
@@ -491,36 +492,58 @@ function onTileClicked (a,b) {
         {
             movePawn(a,b,context.choosedColor,context);
             context.pawnMovesLeft--;
-
-            if (isPawnAtEnd(context.choosedColor,context))
+            if (isDoubleBonus(a,b,context))
             {
-                removeColorFromGame(context.choosedColor);
-                if (context.currentPlayer===0)
+                context.isDoubleTurn=true;
+                context.grille.matrix[context.grille.cols*a+b][2]=0;
+            }
+            if (pawnExistsMove(context.choosedColor,context))
+            {
+                if (isPawnAtEnd(context.choosedColor,context))
                 {
-                    updateScore(context.player1Score+1,context.player2Score);
+                    removeColorFromGame(context.choosedColor);
+                    if (context.currentPlayer===0)
+                    {
+                        updateScore(context.player1Score+1,context.player2Score);
+                    }
+                    else
+                    {
+                        updateScore(context.player1Score,context.player2Score+1);
+                    }
+                    changeTurn();
+                    updateStep(0);
                 }
                 else
                 {
-                    updateScore(context.player1Score,context.player2Score+1);
+                    if (context.pawnMovesLeft===0)
+                    {
+                        changeTurn();
+                        updateStep(0);
+                    }
                 }
-                context.currentPlayer = 1-context.currentPlayer;
-                updateStep(0);
             }
             else
             {
-                if (context.pawnMovesLeft===0)
-                {
-                    context.currentPlayer = 1-context.currentPlayer;
-                    updateStep(0);
-                }
+                changeTurn();
+                updateStep(0);
             }
-
         }
 
     }
     mainState.gridUpdate();
 
     //console.log("i am clicked x = "+x+" y = "+y);
+}
+
+function changeTurn() {
+    if (context.isDoubleTurn)
+    {
+        context.isDoubleTurn=false;
+    }
+    else
+    {
+        context.currentPlayer = 1-context.currentPlayer;
+    }
 }
 
 function chooseColor(choosenColor) {
