@@ -8,27 +8,27 @@ var player1ScoreText;
 var player2ScoreText;
 var colorPickers = [];
 var grille = {
-            cols: 9,
-            rows: 10,
-            // from left
-            //index 1: tile color 0 = no-color , 1=red, 2=yellow, 3=black, 4=green, 5=bleu *-1 p2
-            //index 2: pawn id,  0= empty,  1=red, 2=yellow, 3=black, 4=green, 5=bleu * -1 = P2
-            //index 3: bonus, 0 = empty
+    cols: 9,
+    rows: 10,
+    // from left
+    //index 1: tile color 0 = no-color , 1=red, 2=yellow, 3=black, 4=green, 5=bleu *-1 p2
+    //index 2: pawn id,  0= empty,  1=red, 2=yellow, 3=black, 4=green, 5=bleu * -1 = P2
+    //index 3: bonus, 0 = empty
 
-            matrix: [
-                [-1,-1,0], [0,0,0], [-2,-2,0], [0,0,0], [-3,-3,0], [0,0,0], [-4,-4,0], [0,0,0], [-5,-5,0],
-                [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
-                [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
-                [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
-                [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
-                [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
-                [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
-                [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
-                [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
-                [1,1,0], [0,0,0], [2,2,0], [0,0,0], [3,3,0], [0,0,0], [4,4,0], [0,0,0], [5,5,0],
-            ]
+    matrix: [
+        [-1,-1,0], [0,0,0], [-2,-2,0], [0,0,0], [-3,-3,0], [0,0,0], [-4,-4,0], [0,0,0], [-5,-5,0],
+        [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
+        [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,3], [0,0,0], [0,0,1], [0,0,0],
+        [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,3],
+        [0,0,2], [0,0,0], [0,0,1], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
+        [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,1], [0,0,0],
+        [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
+        [0,0,1], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0],
+        [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,0], [0,0,3],
+        [1,1,0], [0,0,0], [2,2,0], [0,0,0], [3,3,0], [0,0,0], [4,4,0], [0,0,0], [5,5,0],
+    ]
 
-        };
+};
 
 //movesLeft for each color
 //index 0 red
@@ -39,10 +39,10 @@ var grille = {
 
 //step =0 if at throwingDices phase =1 if at selecting colors phase =2 if at coloring tiles phase =3 if at moving pawn phase
 var context = {
-  "grille" : grille,
-  "movesLeft" : [0,0,0,0,0],
-  "currentPlayer" : 0,
-  "step" : 0,
+    "grille" : grille,
+    "movesLeft" : [0,0,0,0,0],
+    "currentPlayer" : 0,
+    "step" : 0,
     "choosedColor" : 0,
     "pawnMovesLeft" : 2,
     "deletedColors" : [],
@@ -56,18 +56,27 @@ var mainState = {
 
     preload: function() {
         game.stage.backgroundColor = '#71c5cf';
-        game.load.spritesheet('dices-red', 'assets/Dices-Red.png', 50, 50, 6);
-        game.load.spritesheet('dices-blue', 'assets/Dices-blue.png', 50, 50, 6);
-        game.load.spritesheet('dices-green', 'assets/Dices-green.png', 50, 50, 6);
-        game.load.spritesheet('dices-gray', 'assets/Dices-gray.png', 50, 50, 6);
-        game.load.spritesheet('dices-yellow', 'assets/Dices-yellow.png', 50, 50, 6);
+        game.load.spritesheet('dices-red', 'assets/Dices/Dices-Red.png', 50, 50, 6);
+        game.load.spritesheet('dices-blue', 'assets/Dices/Dices-blue.png', 50, 50, 6);
+        game.load.spritesheet('dices-green', 'assets/Dices/Dices-green.png', 50, 50, 6);
+        game.load.spritesheet('dices-gray', 'assets/Dices/Dices-gray.png', 50, 50, 6);
+        game.load.spritesheet('dices-yellow', 'assets/Dices/Dices-yellow.png', 50, 50, 6);
 
+        // load grid boxes
         game.load.image('bird', 'assets/bird.png');
         game.load.image('bird-red', 'assets/bird-red.png');
         game.load.image('bird-yellow', 'assets/bird-yellow.png');
         game.load.image('bird-green', 'assets/bird-green.png');
         game.load.image('bird-blue', 'assets/bird-blue.png');
         game.load.image('bird-gray', 'assets/bird-gray.png');
+
+        // load blured grid boxes
+        game.load.image('bird1', 'assets/box/bird.png');
+        game.load.image('bird-red1', 'assets/box/bird-red.png');
+        game.load.image('bird-yellow1', 'assets/box/bird-yellow.png');
+        game.load.image('bird-green1', 'assets/box/bird-green.png');
+        game.load.image('bird-blue1', 'assets/box/bird-blue.png');
+        game.load.image('bird-gray1', 'assets/box/bird-gray.png');
 
 
         game.load.image('throw', 'assets/throw.png');
@@ -76,19 +85,19 @@ var mainState = {
 
 
         // load pawns
-        game.load.image('pawn-gray', 'assets/pawn-gray.png');
-        game.load.image('pawn-green', 'assets/pawn-green.png');
-        game.load.image('pawn-yellow', 'assets/pawn-yellow.png');
-        game.load.image('pawn-blue', 'assets/pawn-blue.png');
-        game.load.image('pawn-red', 'assets/pawn-red.png');
+        game.load.image('pawn-gray', 'assets/Pawns/pawn-gray.png');
+        game.load.image('pawn-green', 'assets/Pawns/pawn-green.png');
+        game.load.image('pawn-yellow', 'assets/Pawns/pawn-yellow.png');
+        game.load.image('pawn-blue', 'assets/Pawns/pawn-blue.png');
+        game.load.image('pawn-red', 'assets/Pawns/pawn-red.png');
 
-        //load colorPicker
+        // load PawnsContour
+        game.load.image('pawn-gray1', 'assets/PawnsContour/pawn-gray.png');
+        game.load.image('pawn-green1', 'assets/PawnsContour/pawn-green.png');
+        game.load.image('pawn-yellow1', 'assets/PawnsContour/pawn-yellow.png');
+        game.load.image('pawn-blue1', 'assets/PawnsContour/pawn-blue.png');
+        game.load.image('pawn-red1', 'assets/PawnsContour/pawn-red.png');
 
-        //game.load.image('colorPicker-red','assets/colorPickerRed.png');
-        //game.load.image('colorPicker-gray','assets/colorPickerGray.png');
-        //game.load.image('colorPicker-green','assets/colorPickerGreen.png');
-        //game.load.image('colorPicker-yellow','assets/colorPickerYellow.png');
-        //game.load.image('colorPicker-blue','assets/colorPickerBlue.png');
 
         //load colorPicker
         game.load.image('marker-red','assets/markers/markerRed.png');
@@ -96,6 +105,11 @@ var mainState = {
         game.load.image('marker-blue','assets/markers/markerBlue.png');
         game.load.image('marker-gray','assets/markers/markerGray.png');
         game.load.image('marker-green','assets/markers/markerGreen.png');
+
+        //load bonuses
+        game.load.image('bonus1','assets/Bonus/bonus1.png');
+        game.load.image('bonus2','assets/Bonus/bonus2.png');
+        game.load.image('bonus3','assets/Bonus/bonus3.png');
 
     },
 
@@ -127,7 +141,7 @@ var mainState = {
         this.labelPlayer1 = game.add.text(20, 10, "Player 1", { font: "30px Arial", fill: "#ffffff" });
         this.labelPlayer2 = game.add.text(20, 550, "Player 2", { font: "30px Arial", fill: "#ffffff" });
 
-        selector = game.add.sprite(game.world.centerX, game.world.centerY, 'marker-blue');
+
 
 
 
@@ -145,15 +159,12 @@ var mainState = {
         throwSprit2.inputEnabled = true;
         throwSprit2.events.onInputDown.add(this.throwPlayer2Dices, this);
 
-        },
+    },
 
 
 
     update: function() {
-        selector.x=game.input.x;
-        selector.y=game.input.y;
-        //this.gridUpdate();
-        //updateColorPicker();
+
     },
 
 
@@ -179,30 +190,11 @@ var mainState = {
 
                 var index = r * grille.cols + c;
 
-                 //index 1 0: no-color, 1=red, 2=yellow, 3=black, 4=green, 5=bleu
-                 //index 2: pawn id,  0= empty,  1=red, 2=yellow, 3=black, 4=green, 5=bleu * -1 = P2
-                 //index 3: bonus, 0 = empty
+                //index 1 0: no-color, 1=red, 2=yellow, 3=black, 4=green, 5=bleu
+                //index 2: pawn id,  0= empty,  1=red, 2=yellow, 3=black, 4=green, 5=bleu * -1 = P2
+                //index 3: bonus, 0 = empty
 
-                /*switch(grille.matrix[index][0]) {
-                    case 0:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird');
-                        break;
-                    case 1:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird');
-                        break;
-                    case 2:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pipe');
-                        break;
-                    case 3:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird');
-                        break;
-                    case 4:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pipe');
-                        break;
-                    case 5:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pipe');
-                        break;
-                }*/
+
                 var image;
                 switch(grille.matrix[index][0]) {
                     case 0:
@@ -224,19 +216,19 @@ var mainState = {
                         image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-blue');
                         break;
                     case -1:
-                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-red');
+                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-red1');
                         break;
                     case -2:
-                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-yellow');
+                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-yellow1');
                         break;
                     case -3:
-                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-gray');
+                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-gray1');
                         break;
                     case -4:
-                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-green');
+                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-green1');
                         break;
                     case -5:
-                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-blue');
+                        image = this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bird-blue1');
                         break;
 
 
@@ -252,7 +244,7 @@ var mainState = {
 
 
 
-                        //index 2: pawn id,  0= empty,  1=red, 2=yellow, 3=black, 4=green, 5=bleu * -1 = P2
+                    //index 2: pawn id,  0= empty,  1=red, 2=yellow, 3=black, 4=green, 5=bleu * -1 = P2
 
                     case 1:
                         this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn-red');
@@ -271,20 +263,38 @@ var mainState = {
                         break;
 
                     case -1:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn-red');
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn-red1');
                         break;
                     case -2:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn-yellow');
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn-yellow1');
                         break;
                     case -3:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn-gray');
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn-gray1');
                         break;
                     case -4:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn-green');
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn-green1');
                         break;
                     case -5:
-                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn-blue');
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'pawn-blue1');
                         break;
+                }
+
+                switch(grille.matrix[index][2]) {
+
+
+
+                    //index 2: pawn id,  0= empty,  1=red, 2=yellow, 3=black, 4=green, 5=bleu * -1 = P2
+
+                    case 1:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bonus1');
+                        break;
+                    case 2:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bonus2');
+                        break;
+                    case 3:
+                        this.add.image(gameSceneOriginX + c*50, r*50+gameSceneOriginY, 'bonus3');
+                        break;
+
                 }
 
 
@@ -298,8 +308,8 @@ var mainState = {
 
     initializeDices: function(){
 
-    // itinialize player2's dices
- var rand =0;
+        // itinialize player2's dices
+        var rand =0;
         //1=red, 2=yellow, 3=black, 4=green, 5=bleu * -1 = P2
         var dice =[];
         dice[0] = game.add.sprite(gameSceneOriginX, 0, 'dices-red');
@@ -388,9 +398,9 @@ var mainState = {
 
     },
 
-     initializePawns: function(){
+    initializePawns: function(){
 
-    // itinialize player2's pawns
+        // itinialize player2's pawns
         for (var i=0; i<grille.cols; i++){
             if(i%2==0){
 
@@ -424,14 +434,14 @@ var mainState = {
     },
 
     throwPlayer1Dices: function(){
-         if (context.step===0&&context.currentPlayer===0)
-         {
+        if (context.step===0&&context.currentPlayer===0)
+        {
             for (var i=0; i<player1Dices.length; i++){
                 context.movesLeft[i]= this.generateDice(player1Dices[i])+1;
             }
             updateStep(context.step+1);
-             updateColorPicker();
-         }
+            updateColorPicker();
+        }
     },
 
     throwPlayer2Dices: function(){
@@ -462,9 +472,9 @@ function onTileClicked (a,b) {
             color(a,b,context.choosedColor,context);
             if (!existsToBeColored(context.choosedColor,context))
             {
-               updateStep(3);
-               mainState.gridUpdate();
-               return;
+                updateStep(3);
+                mainState.gridUpdate();
+                return;
             }
         }
         if (context.movesLeft[getMoveIndexFromColor(context.choosedColor)]===0)
@@ -557,7 +567,7 @@ function updateColorPicker() {
         else
         {
             if (colorPickers.length>0&&colorPickers[0]!==null)
-            colorPickers[0].destroy();
+                colorPickers[0].destroy();
         }
         if (isColorEnabled(2))
         {
@@ -574,7 +584,7 @@ function updateColorPicker() {
         else
         {
             if (colorPickers.length>0&&colorPickers[1]!==null)
-            colorPickers[1].destroy();
+                colorPickers[1].destroy();
         }
         if (isColorEnabled(3))
         {
@@ -591,9 +601,9 @@ function updateColorPicker() {
         else
         {
             if (colorPickers.length>0&&colorPickers[2]!==null)
-            colorPickers[2].destroy();
+                colorPickers[2].destroy();
         }
-        if (isColorEnabled(3))
+        if (isColorEnabled(4))
         {
             colorPickers[3] = game.add.sprite(gameSceneOriginX+470,y*50+150,'bird-green');
             colorPickers[3].inputEnabled = true;
@@ -608,9 +618,9 @@ function updateColorPicker() {
         else
         {
             if (colorPickers.length>0&&colorPickers[3]!==null)
-            colorPickers[3].destroy();
+                colorPickers[3].destroy();
         }
-        if (isColorEnabled(4))
+        if (isColorEnabled(5))
         {
             colorPickers[4] = game.add.sprite(gameSceneOriginX+470,y*50+150,'bird-blue');
             colorPickers[4].inputEnabled = true;
@@ -631,10 +641,10 @@ function updateColorPicker() {
     else
     {
         if (colorPickers.length>0)
-        for (var i = 0;i<5;i++)
-        {
+            for (var i = 0;i<5;i++)
+            {
                 colorPickers[i].destroy();
-        }
+            }
     }
 }
 
