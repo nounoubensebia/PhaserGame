@@ -78,6 +78,10 @@ function movePawn(x, y, color, context) {
     var pawnLocation = getPawnLocation(color,context.grille);
     context.grille.matrix[pawnLocation.x*context.grille.cols+pawnLocation.y][1]=0;
     context.grille.matrix[x*context.grille.cols+y][1]=color;
+    if (isAdditionalStepsBonus(x,y,context))
+    {
+        context.pawnMovesLeft+=2;
+    }
 }
 
 function canPawnMove(x, y,color,context) {
@@ -224,6 +228,25 @@ function existsToBeColored(color, context) {
         }
     }
     return false;
+}
+
+function pawnExistsMove(pawn, context) {
+    for (var i=0;i<context.grille.rows;i++)
+    {
+
+        for (var j=0;j<context.grille.cols;j++)
+        {
+            if (canPawnMove(i,j,pawn,context))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function isAdditionalStepsBonus(x,y,context) {
+    return (context.grille.matrix[x*context.grille.cols+y][2]===1);
 }
 
 function deletePawn(pawn,context) {
